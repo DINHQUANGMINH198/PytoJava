@@ -1,0 +1,78 @@
+Tạo model cho bảng "repu_package":
+go
+Copy code
+php artisan make:model RepuPackage
+Tạo controller cho RepuPackage:
+go
+Copy code
+php artisan make:controller RepuPackageController
+Thêm các phương thức cho controller:
+getAll: Lấy tất cả các bản ghi trong bảng "repu_packages".
+add: Thêm mới một bản ghi vào bảng "repu_packages".
+update: Cập nhật một bản ghi trong bảng "repu_packages".
+php
+Copy code
+use App\RepuPackage;
+use Illuminate\Http\Request;
+
+class RepuPackageController extends Controller
+{
+    public function getAll()
+    {
+        return RepuPackage::all();
+    }
+
+    public function add(Request $request)
+    {
+        $repuPackage = new RepuPackage;
+        $repuPackage->name = $request->name;
+        $repuPackage->description = $request->description;
+        $repuPackage->price = $request->price;
+        $repuPackage->save();
+
+        return response()->json([
+            'message' => 'Successfully added repu_package'
+        ], 200);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $repuPackage = RepuPackage::find($id);
+        $repuPackage->name = $request->input('name');
+        $repuPackage->description = $request->input('description');
+        $repuPackage->price = $request->input('price');
+        $repuPackage->save();
+
+        return response()->json([
+            'message' => 'Successfully updated repu_package'
+        ], 200);
+    }
+}
+Thêm route cho các phương thức trong RepuPackageController trong file routes/api.php:
+css
+Copy code
+Route::get('repu_packages', 'RepuPackageController@getAll');
+Route::post('repu_package', 'RepuPackageController@add');
+Route::put('repu_package/{id}', 'RepuPackageController@update');
+
+
+
+
+Bạn có thể sử dụng các công cụ như Postman hoặc cURL để test gọi API.
+
+Ví dụ với Postman:
+
+Mở Postman
+Chọn phương thức GET để lấy tất cả các bản ghi trong bảng "repu_packages":
+URL: http://localhost:8000/api/repu_packages
+Body: (không cần)
+Headers: (không cần)
+Chọn phương thức POST để thêm mới một bản ghi vào bảng "repu_packages":
+URL: http://localhost:8000/api/repu_package
+Body: Chọn kiểu x-www-form-urlencoded và thêm các trường cần thiết (ví dụ: name, description, price).
+Headers: (không cần)
+Chọn phương thức PUT để cập nhật một bản ghi trong bảng "repu_packages":
+URL: http://localhost:8000/api/repu_package/{id} (thay {id} bằng ID của bản ghi muốn cập nhật)
+Body: Chọn kiểu x-www-form-urlencoded và thêm các trường cần thiết (ví dụ: name, description, price).
+Headers: (không cần)
+Sau khi thực hiện, bạn sẽ nhận được kết quả trả về từ API.
